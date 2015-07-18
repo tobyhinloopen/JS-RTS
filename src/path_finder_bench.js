@@ -17,4 +17,9 @@ function benchmarkMap(map, name, iterations) {
 benchmarkMap(WorldMapFactory.build5x5empty(), '5x5 empty', 1e5);
 benchmarkMap(WorldMapFactory.build5x5WithCenterObstructions(), '5x5 with center obstructions', 1e5);
 benchmarkMap(WorldMapFactory.buildJpsPlusSample(), 'JPS+ sample map', 1e5);
-benchmarkMap(WorldMapFactory.buildJsRtsSampleMap(), 'JS-RTS sample map', 1e3);
+benchmarkMap(WorldMapFactory.buildJsRtsSampleMap(), 'JS-RTS sample map', 50);
+
+var pathFinder = new PathFinder(WorldMapFactory.buildJsRtsSampleMap());
+benchmark('PathFinder(JS-RTS sample map).find 9,13 to 13,0', 10, function() {
+  pathFinder.find({ x: 9, y: 13 }, { x: 13, y: 0 });
+});
