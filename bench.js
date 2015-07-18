@@ -45,7 +45,7 @@ function lpad(str, len) {
 }
 
 Benchmark.prototype.report = function() {
-  return rpad(this.message, 50)+' '
+  return rpad(this.message, 60)+' '
     +lpad('x'+this.done, 12)
     +' - sum: '+lpad(fmtDuration(this.duration), 8)
     +' - avg: '+lpad(fmtDuration(this.duration/this.done), 8)
