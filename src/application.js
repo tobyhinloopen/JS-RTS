@@ -24,12 +24,12 @@ function onClick(x, y) {
   var unit = units[activeUnitIndex];
   var path = pathFinder.find(unit, { x: x, y: y });
   if(path && path.length)
-    unit.scheduleMoveToPoints(path);
+    unit.scheduleMoveToPoints(path.points.slice(1));
 }
 
 function loadAndRenderMap() {
   var mapImage = new Image();
-  mapImage.src = 'sample-map-crosshair.png';
+  mapImage.src = 'sample-map-maze.png';
 
   return new ImageWorldMapReader(mapImage, worldMap).read().then(function() {
     var domWorldMapView = new DomWorldMapView(worldMap, onClick);
