@@ -10,7 +10,7 @@ function PathFinder(worldMap) {
 
 PathFinder.prototype.find = function(from, to) {
   if(from.x == to.x && from.y == to.y)
-    return { points:[], distance: 0 };
+    return { points: [], distance: 0 };
 
   if(this.worldMap.isWall(to.x, to.y))
     return null;
