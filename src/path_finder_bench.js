@@ -26,6 +26,6 @@ benchmarkMap(WorldMapFactory.buildJpsPlusSample(), 'JPS+ sample map', 1e5, 1e5);
 benchmarkMap(WorldMapFactory.buildJsRtsSampleMap(), 'JS-RTS sample map', 50, 1e5);
 
 var pathFinder = new PathFinder(WorldMapFactory.buildJsRtsSampleMap());
-benchmark('PathFinder(JS-RTS sample map).find 9,13 to 13,0', 10, function() {
+benchmark('PathFinder.find JS-RTS sample map 9,13 to 13,0', 10, function() {
   pathFinder.find({ x: 9, y: 13 }, { x: 13, y: 0 });
 });

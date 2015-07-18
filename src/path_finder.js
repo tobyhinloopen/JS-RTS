@@ -76,12 +76,12 @@ PathFinder.prototype.isStraightUnobstructedJump = function(from, to) {
   || this.worldMap.isWall(to.x, to.y))
     return false;
 
-  var distance = Point.getExactGridDistance(from, to);
   var direction = Point.getExactGridDirection(from, to);
   if(!direction)
     return false;
 
-  var value = this.jpsPlus.getPoint(from.x, from.y)[direction];
+  var value = this.jpsPlus.points[from.y][from.x][direction];
+  var distance = Point.getExactGridDistance(from, to);
 
   // check if value is a distance to wall (as a negative number or 0)
   if(value <= 0)
