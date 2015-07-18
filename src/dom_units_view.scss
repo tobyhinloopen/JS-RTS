@@ -1,0 +1,14 @@
+.units-container {
+  position: absolute;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.unit {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border-radius: 1em;
+  background-color: blue;
+}

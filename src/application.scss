@@ -1,0 +1,14 @@
+@import "dom_jps_plus_debug_view";
+@import "dom_units_view";
+@import "dom_world_map_view";
+
+#canvas {
+  font-size: 48px;
+  width: 16em;
+  height: 16em;
+  margin-left: -8em;
+  margin-top: -8em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
