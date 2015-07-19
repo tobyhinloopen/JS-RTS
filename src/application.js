@@ -1,6 +1,7 @@
 var WorldMap = require('world_map');
 var ImageWorldMapReader = require('image_world_map_reader');
 var CanvasPathFinderDebugView = require('canvas_path_finder_debug_view');
+// var DomJpsPlusDebugView = require('dom_jps_plus_debug_view');
 var DomWorldMapView = require('dom_world_map_view');
 var Unit = require('unit');
 var DomUnitsView = require('dom_units_view');
@@ -29,7 +30,7 @@ function onClick(x, y) {
 
 function loadAndRenderMap() {
   var mapImage = new Image();
-  mapImage.src = 'sample-map-dotted.png';
+  mapImage.src = 'maps/sample-map-rooms.png';
 
   return new ImageWorldMapReader(mapImage, worldMap).read().then(function() {
     var domWorldMapView = new DomWorldMapView(worldMap, onClick);
@@ -65,6 +66,10 @@ function loadPathFinder() {
 
   var gridSize = parseInt(window.getComputedStyle(canvas).fontSize);
   canvas.appendChild(new CanvasPathFinderDebugView(pathFinder, gridSize).element);
+
+  // var view = new DomJpsPlusDebugView(pathFinder.jpsPlus);
+  // canvas.appendChild(view.element);
+  // view.render();
 
   return Q();
 }

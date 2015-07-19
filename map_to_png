@@ -1,0 +1,101 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'chunky_png'
+
+class Map
+  attr_accessor :width, :height, :walls
+
+  def initialize
+    @walls = []
+  end
+end
+
+class Wall
+  attr_accessor :x, :y
+
+  def initialize x, y
+    @x = x
+    @y = y
+  end
+end
+
+class MapParser
+  def parse map_data
+    @map_data = false
+    @y = 0
+    @map = Map.new
+    map_data.lines.each_with_index do |line, i|
+      if @map_data
+        data line.rstrip
+      else
+        meta line, i
+      end
+    end
+    @map
+  end
+
+  def data line
+    raise "Unexpected '#{line}', expected #{@map.width} characters." unless line.length == @map.width
+
+    line.split('').each_with_index do |char, x|
+      point char, x, @y
+    end
+
+    @y+=1
+  end
+
+  def point char, x, y
+    case char
+    when '@'
+      @map.walls << Wall.new(x, y)
+    end
+  end
+
+  def meta line, i
+    case line
+    when /^([a-z]+) (\d+)$/
+      send $1, $2.to_i
+    when /^([a-z]+) ([a-z]+)$/
+      send $1, $2
+    when /^map$/
+      @map_data = true
+    else
+      raise "Unexpected '#{line}' on line #{i+1}"
+    end
+  end
+
+  def height height
+    @map.height = height
+  end
+
+  def width width
+    @map.width = width
+  end
+
+  def type type
+    raise "Unknown type '#{type}'" unless type == 'octile'
+  end
+end
+
+class PngMapWriter
+  def initialize map
+    @image = ChunkyPNG::Image.new map.width, map.height, ChunkyPNG::Color::TRANSPARENT
+    color = ChunkyPNG::Color.from_hex '#ff0000'
+    map.walls.each do |wall|
+      @image[wall.x, wall.y] = color
+    end
+  end
+
+  def save filename
+    @image.save filename, :best_compression
+  end
+end
+
+ARGV.each do |file|
+  puts "Reading #{file}"
+  map = MapParser.new.parse File.read file
+  filename = file.sub /\.map$/, ".png"
+  PngMapWriter.new(map).save filename
+  puts "Created #{filename}"
+end

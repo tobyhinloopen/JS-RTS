@@ -2,11 +2,11 @@
 @import "dom_units_view";
 @import "dom_world_map_view";
 
-$width: 32em;
-$height: 32em;
+$width: 16em;
+$height: 16em;
 
 #canvas {
-  font-size: 8px;
+  font-size: 24px;
   width: $width;
   height: $height;
   margin-left: -$width/2;
