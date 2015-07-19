@@ -198,4 +198,28 @@ describe('PathFinder', function() {
       });
     });
   });
+
+  context('with JPS+ rooms map', function() {
+    var pathFinder;
+
+    beforeEach(function() {
+      pathFinder = new PathFinder(WorldMapFactory.buildRoomsSampleMap());
+    });
+
+    it('should find the sortest route from 5,1 to 4,13', function() {
+      var path = pathFinder.find({ x: 5, y: 1 }, { x: 4, y: 13 });
+      var points = path.points;
+      expect(points).to.have.length(5);
+      expect(points[0]).to.eql({ x: 5, y: 1 });
+      try {
+        expect(points[1]).to.eql({ x: 5, y: 4 });
+        expect(points[2]).to.eql({ x: 3, y: 6 });
+      } catch(e) {
+        expect(points[1]).to.eql({ x: 5, y: 8 });
+        expect(points[2]).to.eql({ x: 3, y: 10 });
+      }
+      expect(points[3]).to.eql({ x: 3, y: 12 });
+      expect(points[4]).to.eql({ x: 4, y: 13 });
+    });
+  });
 });

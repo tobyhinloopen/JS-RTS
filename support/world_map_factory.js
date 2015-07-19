@@ -47,6 +47,27 @@ exports.buildJsRtsSampleMap = function() {
   ]);
 };
 
+exports.buildRoomsSampleMap = function() {
+  return worldMapForWalls([
+    "         x      ",
+    " x   s          ",
+    " x       x      ",
+    "xxxxx xxxxxxxx x",
+    " x       x      ",
+    " x       x      ",
+    " x       x      ",
+    " x       x      ",
+    "                ",
+    " x       x      ",
+    " x       x      ",
+    " xx xxxxxxxx xxx",
+    " x       x      ",
+    " x  s           ",
+    " x       x      ",
+    " x       x      "
+  ]);
+};
+
 exports.build3x3empty = function() {
   return worldMapForWalls([
     "  s",

@@ -53,8 +53,10 @@ function loadAndRenderUnits() {
     unitsView.add(unit);
   }
 
-  for(var i=0, spawnPoint; spawnPoint = worldMap.spawnPoints[i]; i++)
-    createAndRenderMovingUnit(spawnPoint, { x: (Math.random()*16)|0, y: (Math.random()*16)|0 });
+  //for(var i=0, spawnPoint; spawnPoint = worldMap.spawnPoints[i]; i++)
+  //  createAndRenderMovingUnit(spawnPoint, { x: (Math.random()*16)|0, y: (Math.random()*16)|0 });
+
+  createAndRenderMovingUnit({ x: 5, y: 1 }, { x: 4, y: 13 });
 
   unitsView.render();
 

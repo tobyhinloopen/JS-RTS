@@ -108,7 +108,7 @@ var DIRECTION_BLACKLIST = {
   sw: ["n", "ne", "e"],
   ne: ["s", "sw", "w"],
   se: ["n", "nw", "w"]
-}
+};
 
 PathFinder.prototype.nextJumpPointsFor = function(point, incomingDirection) {
   var directionBlacklist = DIRECTION_BLACKLIST[incomingDirection];
