@@ -42,18 +42,24 @@ PathFinder.prototype.find = function(from, to) {
 }
 
 PathFinder.prototype.createUnobstructedJumpPath = function(path, to) {
-  if(this.isStraightUnobstructedJump(path.last, to))
-    return path.add(to);
+  var incomingDirection = path.length >= 2 && Point.getExactGridDirection(path.parent.last, path.last);
+  if(this.isStraightUnobstructedJump(path.last, to)) {
+    var direction = Point.getExactGridDirection(path.last, to);
+    return direction == incomingDirection ? path.parent.add(to) : path.add(to);
+  }
 
   var pivotPoints = Point.getPivotPoints(path.last, to);
   for(var i=0, pivotPoint; pivotPoint = pivotPoints[i]; i++)
     if(this.isStraightUnobstructedJump(path.last, pivotPoint)
-    && this.isStraightUnobstructedJump(pivotPoint, to))
-      return path.add(pivotPoint).add(to);
+    && this.isStraightUnobstructedJump(pivotPoint, to)) {
+      var direction = Point.getExactGridDirection(path.last, pivotPoint);
+      var path = direction == incomingDirection ? path.parent.add(pivotPoint) : path.add(pivotPoint);
+      return path.add(to);
+    }
 }
 
 PathFinder.prototype.createPathsForJumpPoints = function(path) {
-  var incomingDirection = path.length >= 2 ? Point.getExactGridDirection(path.parent.last, path.last) : null;
+  var incomingDirection = path.length >= 2 && Point.getExactGridDirection(path.parent.last, path.last);
   var points = this.nextJumpPointsFor(path.last, incomingDirection);
 
   for(var i=0, point; point = points[i]; i++) {
