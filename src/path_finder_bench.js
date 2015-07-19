@@ -29,3 +29,7 @@ var pathFinder = new PathFinder(WorldMapFactory.buildJsRtsSampleMap());
 benchmark('PathFinder.find JS-RTS sample map 9,13 to 13,0', 10, function() {
   pathFinder.find({ x: 9, y: 13 }, { x: 13, y: 0 });
 });
+
+benchmark('PathFinder.find JS-RTS sample map 0,15 to 12,3', 10, function() {
+  pathFinder.find({ x: 0, y: 15 }, { x: 12, y: 3 });
+});
