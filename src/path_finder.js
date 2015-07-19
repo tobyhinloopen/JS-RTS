@@ -19,12 +19,12 @@ PathFinder.prototype.find = function(from, to) {
     return new ImmutablePath(from).add(to);
 
   var pivotPoints = Point.getPivotPoints(from, to);
-  for(var i=0, pivotPoint; pivotPoint = pivotPoints[i]; i++) {
+  for(var i=0, pivotPoint; pivotPoint = pivotPoints[i]; i++)
     if(this.isStraightUnobstructedJump(from, pivotPoint)
     && this.isStraightUnobstructedJump(pivotPoint, to))
       return new ImmutablePath(from).add(pivotPoint).add(to);
-  }
 
+  this.shortestDestinationPointDistances = {};
   this.sortedPaths = [new ImmutablePath(from)];
 
   while(this.sortedPaths.length > 0) {
@@ -57,14 +57,20 @@ PathFinder.prototype.createPathsForJumpPoints = function(path) {
   var points = this.nextJumpPointsFor(path.last, incomingDirection);
 
   for(var i=0, point; point = points[i]; i++) {
-    if(!path.contains(point)) {
-      var direction = Point.getExactGridDirection(path.last, point);
-      this.pushSortedPath(direction == incomingDirection ? path.parent.add(point) : path.add(point));
-    }
+    var direction = Point.getExactGridDirection(path.last, point);
+    this.pushSortedPath(direction == incomingDirection ? path.parent.add(point) : path.add(point));
   }
 };
 
+PathFinder.prototype.shorterOrEqualPathExists = function(path) {
+  var existingDistance = this.shortestDestinationPointDistances[path.last.x + '-' + path.last.y];
+  return existingDistance != null && existingDistance <= path.distance;
+};
+
 PathFinder.prototype.pushSortedPath = function(path) {
+  if(this.shorterOrEqualPathExists(path))
+    return;
+  this.shortestDestinationPointDistances[path.last.x + '-' + path.last.y] = path.distance;
   this.sortedPaths.push(path);
   this.sortedPaths.sort(function(a, b) {
     return a.distance - b.distance;

@@ -96,6 +96,11 @@ describe('PathFinder', function() {
       expect(path.points).to.eql([{x:9,y:13},{x:10,y:12},{x:10,y:10},{x:14,y:6},{x:14,y:1},{x:13,y:0}]);
     });
 
+    it('should path-find from 0,15 to 12,3 without freezing', function() {
+      var path = pathFinder.find({ x: 0, y: 15 }, { x: 12, y: 3 });
+      expect(path.points).to.eql([{x:0,y:15},{x:1,y:14},{x:1,y:10},{x:10,y:1},{x:12,y:1},{x:12,y:3}]);
+    });
+
     var COUNT = 0;
     for(var i=0, points = []; i<COUNT+1; i++)
       points.push({ x: (Math.random()*16)|0, y: (Math.random()*16)|0 });
