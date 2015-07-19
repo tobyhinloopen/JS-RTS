@@ -30,7 +30,7 @@ function onClick(x, y) {
 
 function loadAndRenderMap() {
   var mapImage = new Image();
-  mapImage.src = 'maps/sample-map-rooms.png';
+  mapImage.src = 'maps/sample-map-crosshair.png';
 
   return new ImageWorldMapReader(mapImage, worldMap).read().then(function() {
     var domWorldMapView = new DomWorldMapView(worldMap, onClick);
@@ -56,7 +56,8 @@ function loadAndRenderUnits() {
   //for(var i=0, spawnPoint; spawnPoint = worldMap.spawnPoints[i]; i++)
   //  createAndRenderMovingUnit(spawnPoint, { x: (Math.random()*16)|0, y: (Math.random()*16)|0 });
 
-  createAndRenderMovingUnit({ x: 5, y: 1 }, { x: 4, y: 13 });
+  createAndRenderMovingUnit({ x: 0, y: 15 }, { x: 12, y: 3 });
+  //createAndRenderMovingUnit({ x: 5, y: 1 }, { x: 4, y: 13 });
 
   unitsView.render();
 

@@ -57,8 +57,12 @@ PathFinder.prototype.createPathsForJumpPoints = function(path) {
   var points = this.nextJumpPointsFor(path.last, incomingDirection);
 
   for(var i=0, point; point = points[i]; i++) {
-    var direction = Point.getExactGridDirection(path.last, point);
-    this.pushSortedPath(direction == incomingDirection ? path.parent.add(point) : path.add(point));
+    var newPath = path.parent && this.createUnobstructedJumpPath(path.parent, point);
+    if(!newPath) {
+      var direction = Point.getExactGridDirection(path.last, point);
+      newPath = direction == incomingDirection ? path.parent.add(point) : path.add(point)
+    }
+    this.pushSortedPath(newPath);
   }
 };
 
