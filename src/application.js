@@ -29,7 +29,7 @@ function onClick(x, y) {
 
 function loadAndRenderMap() {
   var mapImage = new Image();
-  mapImage.src = 'sample-map-maze.png';
+  mapImage.src = 'sample-map-dotted.png';
 
   return new ImageWorldMapReader(mapImage, worldMap).read().then(function() {
     var domWorldMapView = new DomWorldMapView(worldMap, onClick);

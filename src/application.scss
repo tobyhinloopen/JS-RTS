@@ -2,12 +2,15 @@
 @import "dom_units_view";
 @import "dom_world_map_view";
 
+$width: 32em;
+$height: 32em;
+
 #canvas {
-  font-size: 24px;
-  width: 16em;
-  height: 16em;
-  margin-left: -8em;
-  margin-top: -8em;
+  font-size: 8px;
+  width: $width;
+  height: $height;
+  margin-left: -$width/2;
+  margin-top: -$height/2;
   position: absolute;
   top: 50%;
   left: 50%;
