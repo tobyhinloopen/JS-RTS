@@ -1,6 +1,6 @@
 var WorldMap = require('world_map');
 var ImageWorldMapReader = require('image_world_map_reader');
-var DomJpsPlusDebugView = require('dom_jps_plus_debug_view');
+var CanvasPathFinderDebugView = require('canvas_path_finder_debug_view');
 var DomWorldMapView = require('dom_world_map_view');
 var Unit = require('unit');
 var DomUnitsView = require('dom_units_view');
@@ -29,7 +29,7 @@ function onClick(x, y) {
 
 function loadAndRenderMap() {
   var mapImage = new Image();
-  mapImage.src = 'sample-map-maze.png';
+  mapImage.src = 'sample-map-crosshair.png';
 
   return new ImageWorldMapReader(mapImage, worldMap).read().then(function() {
     var domWorldMapView = new DomWorldMapView(worldMap, onClick);
@@ -63,9 +63,8 @@ function loadAndRenderUnits() {
 function loadPathFinder() {
   pathFinder = new PathFinder(worldMap);
 
-  var view = new DomJpsPlusDebugView(pathFinder.jpsPlus);
-  canvas.appendChild(view.element);
-  view.render();
+  var gridSize = parseInt(window.getComputedStyle(canvas).fontSize);
+  canvas.appendChild(new CanvasPathFinderDebugView(pathFinder, gridSize).element);
 
   return Q();
 }
