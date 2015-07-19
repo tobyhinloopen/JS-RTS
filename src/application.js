@@ -30,7 +30,7 @@ function onClick(x, y) {
 
 function loadAndRenderMap() {
   var mapImage = new Image();
-  mapImage.src = 'maps/sample-map-rooms.png';
+  mapImage.src = 'maps/8room_005_cropped.png';
 
   return new ImageWorldMapReader(mapImage, worldMap).read().then(function() {
     var domWorldMapView = new DomWorldMapView(worldMap, onClick);
@@ -53,13 +53,13 @@ function loadAndRenderUnits() {
     unitsView.add(unit);
   }
 
-  //for(var i=0, spawnPoint; spawnPoint = worldMap.spawnPoints[i]; i++)
-  //  createAndRenderMovingUnit(spawnPoint, { x: (Math.random()*16)|0, y: (Math.random()*16)|0 });
+  for(var i=0, spawnPoint; spawnPoint = worldMap.spawnPoints[i]; i++)
+    createAndRenderMovingUnit(spawnPoint, {x:-1,y:-1}/*{ x: (Math.random()*16)|0, y: (Math.random()*16)|0 }*/);
 
   //createAndRenderMovingUnit({ x: 0, y: 15 }, { x: 12, y: 3 });
   //createAndRenderMovingUnit({ x: 9, y: 13 }, { x: 13, y: 0 });
   //createAndRenderMovingUnit({ x: 0, y: 15 }, { x: 12, y: 3 });
-  createAndRenderMovingUnit({ x: 5, y: 1 }, { x: 4, y: 13 });
+  //createAndRenderMovingUnit({ x: 5, y: 1 }, { x: 4, y: 13 });
 
   unitsView.render();
 
