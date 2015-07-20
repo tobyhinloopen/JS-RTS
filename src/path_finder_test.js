@@ -106,8 +106,9 @@ describe('PathFinder', function() {
 
     it('should path-find from 0,15 to 12,3 without freezing', function() {
       var path = pathFinder.find({ x: 0, y: 15 }, { x: 12, y: 3 });
+      expect(path.distance).to.be(DIAGONAL_DISTANCE*10+8);
       try {
-        expect(path.points).to.eql([{x:0,y:15},{x:1,y:14},{x:1,y:10},{x:10,y:1},{x:12,y:1},{x:12,y:3}]);
+        expect(path.points).to.eql([{x:0,y:15},{x:0,y:11},{x:10,y:1},{x:12,y:1},{x:12,y:3}]);
       } catch(e) {
         expect(path.points).to.eql([{x:0,y:15},{x:4,y:15},{x:14,y:5},{x:14,y:3},{x:12,y:3}]);
       }
