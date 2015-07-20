@@ -84,10 +84,14 @@ PathFinder.prototype.pushSortedPath = function(path) {
     return;
   this.shortestDestinationPointDistances[path.last.x + '-' + path.last.y] = path.distance;
   path.__distanceToDestination = path.distance + Point.getDistance(path.last, this.to);
+  for(var i=0, other; other = this.sortedPaths[i]; i++)
+    if(other.__distanceToDestination > path.__distanceToDestination)
+      return this.sortedPaths.splice(i, 0, path);
   this.sortedPaths.push(path);
-  this.sortedPaths.sort(function(a, b) {
-    return a.__distanceToDestination - b.__distanceToDestination;
-  });
+  // this.sortedPaths.push(path);
+  // this.sortedPaths.sort(function(a, b) {
+  //   return a.__distanceToDestination - b.__distanceToDestination;
+  // });
 };
 
 PathFinder.prototype.isStraightUnobstructedJump = function(from, to) {
