@@ -1,4 +1,5 @@
 var WorldMap = require('world_map');
+var _128x128rooms_walls = require('128x128rooms_walls');
 
 function worldMapForWalls(walls) {
   var worldMap = new WorldMap();
@@ -117,4 +118,12 @@ exports.build3x3withGate = function() {
     "   ",
     "sx "
   ]);
+};
+
+exports.build128x128rooms = function() {
+  var worldMap = new WorldMap();
+  worldMap.setSize(128, 128);
+  for(var i=0, wall; wall = _128x128rooms_walls[i]; i++)
+    worldMap.addWallPoint(wall.x, wall.y);
+  return worldMap;
 };
