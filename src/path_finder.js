@@ -9,6 +9,8 @@ function PathFinder(worldMap) {
 }
 
 PathFinder.prototype.find = function(from, to) {
+  this.to = to;
+
   if(from.x == to.x && from.y == to.y)
     return { points: [], distance: 0 };
 
@@ -81,9 +83,10 @@ PathFinder.prototype.pushSortedPath = function(path) {
   if(this.shorterOrEqualPathExists(path))
     return;
   this.shortestDestinationPointDistances[path.last.x + '-' + path.last.y] = path.distance;
+  path.__distanceToDestination = path.distance + Point.getDistance(path.last, this.to);
   this.sortedPaths.push(path);
   this.sortedPaths.sort(function(a, b) {
-    return a.distance - b.distance;
+    return a.__distanceToDestination - b.__distanceToDestination;
   });
 };
 
