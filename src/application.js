@@ -42,7 +42,7 @@ function createRenderer() {
 
 function loadMap(fn) {
   var mapImage = new Image();
-  mapImage.src = 'maps/8room_005_cropped.png';
+  mapImage.src = 'maps/sample-map-crosshair.png';
   new ImageWorldMapReader(mapImage, worldMap).read().then(fn);
 }
 
