@@ -13,11 +13,15 @@ var pathFinder;
 var renderer;
 var activeUnitIndex = 0;
 var stage = new PIXI.Container();
-var unitTexture = PIXI.Texture.fromImage('assets/unit.png');
-var wallTexture = PIXI.Texture.fromImage('assets/wall-tile.png');
-var groundTexture = PIXI.Texture.fromImage('assets/ground-tile.png');
 var unitSprites = [];
 var GRID_SIZE = 32;
+var resources;
+
+var RESOLUTION = 2;
+
+PIXI.loader.add('unit', 'assets/unit.png');
+PIXI.loader.add('wallTile', 'assets/wall-tile.png');
+PIXI.loader.add('groundTile', 'assets/ground-tile.png');
 
 function onClick(x, y) {
   if(++activeUnitIndex >= units.length)
@@ -43,22 +47,28 @@ function loadMap(fn) {
 }
 
 function renderMap() {
-  var groundSprite = new PIXI.extras.TilingSprite(groundTexture, worldMap.width * GRID_SIZE, worldMap.height * GRID_SIZE);
-  stage.addChild(groundSprite);
+  var mapContainer = new PIXI.Container();
+  
+  var groundSprite = new PIXI.extras.TilingSprite(resources.groundTile.texture, worldMap.width * GRID_SIZE, worldMap.height * GRID_SIZE);
+  mapContainer.addChild(groundSprite);
 
   worldMap.iterateWalls(function(x, y) {
-    var wallSprite = new PIXI.Sprite(wallTexture);
+    var wallSprite = new PIXI.Sprite(resources.wallTile.texture);
     wallSprite.position.x = x * GRID_SIZE;
     wallSprite.position.y = y * GRID_SIZE;
-    stage.addChild(wallSprite);
+    mapContainer.addChild(wallSprite);
   });
+
+  var mapTexture = new PIXI.RenderTexture(renderer, worldMap.width * GRID_SIZE, worldMap.height * GRID_SIZE);
+  mapTexture.render(mapContainer);
+  stage.addChild(new PIXI.Sprite(mapTexture));
 }
 
 function createUnit(position) {
   var unit = new Unit(position.x, position.y);
   unit.time = time.time;
   units.push(unit);
-  var unitSprite = new PIXI.Sprite(unitTexture);
+  var unitSprite = new PIXI.Sprite(resources.unit.texture);
   unitSprites.push(unitSprite);
   unitSprite.anchor.set(0.5);
   unitSprite.position.x = unit.x * GRID_SIZE + GRID_SIZE/2;
@@ -100,8 +110,12 @@ function initializeGameLoop() {
 
 loadMap(function() {
   createRenderer();
-  renderMap();
-  loadPathFinder();
-  loadUnits();
-  initializeGameLoop();
+
+  PIXI.loader.load(function(_, _resources) {
+    resources = _resources;
+    renderMap();
+    loadPathFinder();
+    loadUnits();
+    initializeGameLoop();
+  });
 });
