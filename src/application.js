@@ -1,23 +1,23 @@
 var WorldMap = require('world_map');
 var ImageWorldMapReader = require('image_world_map_reader');
-var CanvasPathFinderDebugView = require('canvas_path_finder_debug_view');
-// var DomJpsPlusDebugView = require('dom_jps_plus_debug_view');
-var DomWorldMapView = require('dom_world_map_view');
 var Unit = require('unit');
-var DomUnitsView = require('dom_units_view');
 var Timer = require('timer');
 var PathFinder = require('path_finder');
 var Point = require('point');
-var Q = require('q');
 
 var time = new Timer();
 
-var canvas = document.getElementById('canvas');
-var unitsView;
 var worldMap = new WorldMap();
 var units = [];
 var pathFinder;
+var renderer;
 var activeUnitIndex = 0;
+var stage = new PIXI.Container();
+var unitTexture = PIXI.Texture.fromImage('assets/unit.png');
+var wallTexture = PIXI.Texture.fromImage('assets/wall-tile.png');
+var groundTexture = PIXI.Texture.fromImage('assets/ground-tile.png');
+var unitSprites = [];
+var GRID_SIZE = 32;
 
 function onClick(x, y) {
   if(++activeUnitIndex >= units.length)
@@ -28,79 +28,80 @@ function onClick(x, y) {
     unit.scheduleMoveToPoints(path.points.slice(1));
 }
 
-function loadAndRenderMap() {
+function createRenderer() {
+  renderer = new PIXI.WebGLRenderer(worldMap.width * GRID_SIZE, worldMap.height * GRID_SIZE);
+  renderer.view.addEventListener('click', function(e) {
+    onClick((e.layerX / GRID_SIZE)|0, (e.layerY / GRID_SIZE)|0);
+  });
+  document.body.appendChild(renderer.view);
+}
+
+function loadMap(fn) {
   var mapImage = new Image();
   mapImage.src = 'maps/8room_005_cropped.png';
+  new ImageWorldMapReader(mapImage, worldMap).read().then(fn);
+}
 
-  return new ImageWorldMapReader(mapImage, worldMap).read().then(function() {
-    var domWorldMapView = new DomWorldMapView(worldMap, onClick);
-    canvas.appendChild(domWorldMapView.element);
-    domWorldMapView.render();
+function renderMap() {
+  var groundSprite = new PIXI.extras.TilingSprite(groundTexture, worldMap.width * GRID_SIZE, worldMap.height * GRID_SIZE);
+  stage.addChild(groundSprite);
+
+  worldMap.iterateWalls(function(x, y) {
+    var wallSprite = new PIXI.Sprite(wallTexture);
+    wallSprite.position.x = x * GRID_SIZE;
+    wallSprite.position.y = y * GRID_SIZE;
+    stage.addChild(wallSprite);
   });
 }
 
-function loadAndRenderUnits() {
-  unitsView = new DomUnitsView();
-  canvas.appendChild(unitsView.element);
+function createUnit(position) {
+  var unit = new Unit(position.x, position.y);
+  unit.time = time.time;
+  units.push(unit);
+  var unitSprite = new PIXI.Sprite(unitTexture);
+  unitSprites.push(unitSprite);
+  unitSprite.anchor.set(0.5);
+  unitSprite.position.x = unit.x * GRID_SIZE + GRID_SIZE/2;
+  unitSprite.position.y = unit.y * GRID_SIZE + GRID_SIZE/2;
+  stage.addChild(unitSprite);
+}
 
-  var createAndRenderMovingUnit = function(from, to) {
-    var unit = new Unit(from.x, from.y);
-    unit.time = time.time;
-    var path = pathFinder.find(unit, to);
-    if(path && path.length)
-      unit.scheduleMoveToPoints(path.points.slice(1));
-    units.push(unit);
-    unitsView.add(unit);
-  }
-
+function loadUnits() {
   for(var i=0, spawnPoint; spawnPoint = worldMap.spawnPoints[i]; i++)
-    createAndRenderMovingUnit(spawnPoint, {x:-1,y:-1}/*{ x: (Math.random()*16)|0, y: (Math.random()*16)|0 }*/);
-
-  //createAndRenderMovingUnit({ x: 0, y: 15 }, { x: 12, y: 3 });
-  //createAndRenderMovingUnit({ x: 9, y: 13 }, { x: 13, y: 0 });
-  //createAndRenderMovingUnit({ x: 0, y: 15 }, { x: 12, y: 3 });
-  //createAndRenderMovingUnit({ x: 5, y: 1 }, { x: 4, y: 13 });
-
-  unitsView.render();
-
-  return Q();
+    createUnit(spawnPoint);
 }
 
 function loadPathFinder() {
   pathFinder = new PathFinder(worldMap);
-
-  var gridSize = parseInt(window.getComputedStyle(canvas).fontSize);
-  canvas.appendChild(new CanvasPathFinderDebugView(pathFinder, gridSize).element);
-
-  // var view = new DomJpsPlusDebugView(pathFinder.jpsPlus);
-  // canvas.appendChild(view.element);
-  // view.render();
-
-  return Q();
 }
 
 function update() {
   for(var i=0, unit; unit = units[i]; i++) {
     unit.time = time.time;
     unit.update();
+    var sprite = unitSprites[i];
+    sprite.position.x = unit.x * GRID_SIZE + GRID_SIZE/2;
+    sprite.position.y = unit.y * GRID_SIZE + GRID_SIZE/2;
+    sprite.rotation = unit.rotation;
   }
-  unitsView.render();
 }
 
 function next() {
   time.next();
   update();
+  renderer.render(stage);
   requestAnimationFrame(next);
 }
 
 function initializeGameLoop() {
   time.start();
   requestAnimationFrame(next);
-  return Q();
 }
 
-loadAndRenderMap().
-then(loadPathFinder).
-then(loadAndRenderUnits).
-then(initializeGameLoop).
-done();
+loadMap(function() {
+  createRenderer();
+  renderMap();
+  loadPathFinder();
+  loadUnits();
+  initializeGameLoop();
+});

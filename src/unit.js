@@ -3,6 +3,7 @@ var Timer = require('timer');
 function Unit(x, y) {
   this.x = x;
   this.y = y;
+  this.rotation = 0;
   this.time = 0;
 }
 
@@ -34,6 +35,8 @@ Unit.prototype.moveTo = function(x, y) {
 Unit.prototype.moveBy = function(x, y) {
   if(!x && !y)
     return;
+
+  this.rotation = Math.atan2(y, x);
 
   this.moveFromX = this.x;
   this.moveFromY = this.y;
