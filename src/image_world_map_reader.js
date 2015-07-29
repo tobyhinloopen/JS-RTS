@@ -1,4 +1,4 @@
-var Q = require('q');
+var WorldMap = require('world_map');
 
 function ImageWorldMapReader(image, worldMap) {
   this.canvas = document.createElement('canvas');
@@ -7,18 +7,23 @@ function ImageWorldMapReader(image, worldMap) {
   this.worldMap = worldMap;
 }
 
-ImageWorldMapReader.prototype.read = function() {
-  return new Q.Promise((function(resolve) {
-    var imageReady = (function() {
-      this.readFromImage();
-      resolve();
-    }).bind(this);
+ImageWorldMapReader.load = function(path, fn) {
+  var worldMap = new WorldMap();
+  var image = new Image();
+  image.src = path;
+  new ImageWorldMapReader(image, worldMap).read(fn.bind(null, worldMap));
+}
 
-    if(this.image.naturalWidth && this.image.naturalHeight)
-      imageReady();
-    else
-      this.image.onload = imageReady;
-  }).bind(this));
+ImageWorldMapReader.prototype.read = function(cb) {
+  var imageReady = (function() {
+    this.readFromImage();
+    cb();
+  }).bind(this);
+
+  if(this.image.naturalWidth && this.image.naturalHeight)
+    imageReady();
+  else
+    this.image.onload = imageReady;
 }
 
 ImageWorldMapReader.prototype.readFromImage = function() {

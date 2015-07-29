@@ -49,7 +49,8 @@ Unit.prototype.moveBy = function(x, y) {
   this.moveEndTime = this.moveStartTime + this.moveDuration;
 }
 
-Unit.prototype.update = function() {
+Unit.prototype.update = function(time) {
+  this.time = time;
   this.updateMovement();
 }
 
