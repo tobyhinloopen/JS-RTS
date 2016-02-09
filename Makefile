@@ -9,13 +9,13 @@ clean:
 	rm -rf dist/application.js dist/application.css node.profiler.json reports
 
 test:
-	NODE_PATH=$(NODE_PATH):support node_modules/mocha/bin/mocha -s 4 --no-timeouts $(TEST_SRC)
+	NODE_PATH=$(NODE_PATH):support node_modules/.bin/mocha -s 4 --no-timeouts $(TEST_SRC)
 
 watch:
-	NODE_PATH=$(NODE_PATH):support node_modules/mocha/bin/mocha -s 4 --watch --reporter min $(TEST_SRC)
+	NODE_PATH=$(NODE_PATH):support node_modules/.bin/mocha -s 4 --watch --reporter min $(TEST_SRC)
 
 profile:
-	NODE_PATH=$(NODE_PATH):support node_modules/node.profiler/cli.js profile.js includeThirdParty=true safeAsyncDetection=false
+	NODE_PATH=$(NODE_PATH):support node_modules/.bin/node.profiler profile.js includeThirdParty=true safeAsyncDetection=false
 
 bench:
 	NODE_PATH=$(NODE_PATH):support node bench.js
